@@ -1,5 +1,5 @@
 #!/bin/python3
-import json, optparse, redis
+import json, optparse, redis, multiprocessing
 from output_result import output_result
 
 def menu():
@@ -35,6 +35,7 @@ def main():
     domains = domains_file.read().splitlines()
     nameservers_file.close()
     domains_file.close()
+    fire = multiprocessing.Pool(30)
 
     list_to_resolve = list()
 
@@ -45,10 +46,10 @@ def main():
 
             list_to_resolve.append([domain,nameserver])
             print(list_to_resolve)
-            
-    output_result(
-    list_to_resolve
-    )
+    
+    fire.map(output_result, list_to_resolve)
+    fire.close()
+    fire.join()
     
 
 if __name__== "__main__":

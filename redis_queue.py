@@ -1,9 +1,9 @@
 import redis
 
-REDIS_HOST = "redis"
+REDIS_HOST = "127.0.0.1"
 REDIS_PORT = "6379"
 
-class RedisQueue(object):
+class redis_queue(object):
     """Simple Queue with Redis Backend"""
     def __init__(self, name, namespace='queue', **redis_kwargs):
         """The default connection parameters are: host='localhost', port=6379, db=0"""
@@ -24,6 +24,9 @@ class RedisQueue(object):
     def put(self, item):
         """Put item into the queue."""
         self.__db.rpush(self.key, item)
+
+    def hset(self,key,value):
+        self.__db.hset(self.key,key,value)
 
     def get(self, block=True, timeout=None):
         """Remove and return an item from the queue.
