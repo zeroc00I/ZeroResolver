@@ -10,7 +10,6 @@ def menu():
     parser.add_option('-m', '--maxtimeout', dest="max_time_out", help='2 (time in seconds)')
     parser.add_option('-v', '--verbose', dest="verbose_output", action="store_true", default=False, help='-v [Will output results with ERROR status')
 
-
     options, args = parser.parse_args()
 
     if not options.domains_list:
@@ -23,8 +22,6 @@ def menu():
 
     globals().update(locals())
 
-
-
 def main():
     menu()
 
@@ -35,7 +32,8 @@ def main():
     domains = domains_file.read().splitlines()
     nameservers_file.close()
     domains_file.close()
-    fire = multiprocessing.Pool(30)
+    
+    fire = multiprocessing.Pool(2)
 
     list_to_resolve = list()
 
@@ -44,13 +42,19 @@ def main():
 
         for nameserver in nameservers:
 
-            list_to_resolve.append([domain,nameserver])
-            print(list_to_resolve)
+            list_to_resolve.append([
+                domain,
+                nameserver
+                ])
+    try:
+        fire.map(
+            output_result,
+            list_to_resolve
+            )
+        fire.close()
+        fire.join()
+    except Exception:
+        pass
     
-    fire.map(output_result, list_to_resolve)
-    fire.close()
-    fire.join()
-    
-
 if __name__== "__main__":
     main()

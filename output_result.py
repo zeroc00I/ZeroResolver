@@ -7,7 +7,7 @@ class output_result:
         self.nameserver = list_to_resolve[1]
         self.client = pymongo.MongoClient("127.0.0.1", 27017)
         self.db = self.client.resolved
-        self.db.collection.drop()
+        #self.db.collection.drop()
         self.collection = self.db['collection']
         self.data_manipulation(self.domain,self.nameserver)
 
